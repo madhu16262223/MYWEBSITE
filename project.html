@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>madhu_WEB — Projects</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <script>
+    if (sessionStorage.getItem("auth") !== "ok") {
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <div class="main">
+    <div class="navbar">
+      <div class="icon"><h2 class="logo">madhu</h2></div>
+
+      <div class="menu">
+        <ul>
+          <li><a href="./index.html">HOME</a></li>
+          <li><a href="./about.html">ABOUT</a></li>
+          <li><a href="./service.html">SERVICE</a></li>
+          <li><a href="./design.html">DESIGN</a></li>
+          <li><a class="active" href="./projects.html">PROJECTS</a></li>
+          <li><a href="./contact.html">CONTACT</a></li>
+        </ul>
+      </div>
+
+      <div class="auth-buttons">
+        <button id="loginBtnNav" class="auth-btn">Logout</button>
+        <button id="signupBtnNav" class="auth-btn" style="display:none">Signup</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <h1>My <span>Projects</span></h1>
+
+      <!-- Reuse service-grid for project cards -->
+      <div class="service-grid">
+        <div class="service-card">
+          <h3>Fake News Detector</h3>
+          <p>ML project in Python to detect fake news. Streamlit UI + dataset preprocessing.</p>
+          <p class="muted">Tech: Python, scikit‑learn, pandas</p>
+        </div>
+        <div class="service-card">
+          <h3>Portfolio Website</h3>
+          <p>Responsive multi‑page portfolio with top‑right auth UI.</p>
+          <p class="muted">Tech: HTML, CSS, JavaScript</p>
+        </div>
+        <div class="service-card">
+          <h3>DevOps Pipeline Demo</h3>
+          <p>CI/CD with Jenkins and Docker; deploy to static hosting on AWS.</p>
+          <p class="muted">Tech: Jenkins, Docker, AWS</p>
+        </div>
+        <div class="service-card">
+          <h3>Student Dashboard UI</h3>
+          <p>Design prototype for a dashboard (cards, charts, filters).</p>
+          <p class="muted">Tech: Figma/HTML mock</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal + Auth logic same as others -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2>Login Here</h2>
+      <input id="username" type="text" placeholder="Enter Username" />
+      <input id="password" type="password" placeholder="Enter Password" />
+      <button id="loginSubmit" class="btnn" type="button">Login</button>
+      <p id="loginError" class="error-text"></p>
+    </div>
+  </div>
+
+  <script>
+    const VALID_USER="gurumadhu.k", VALID_PASS="madhu1626";
+    const loginBtnNav=document.getElementById("loginBtnNav");
+    const signupBtnNav=document.getElementById("signupBtnNav");
+    const modal=document.getElementById("loginModal");
+    const closeModal=document.getElementById("closeModal");
+    const loginSubmit=document.getElementById("loginSubmit");
+    const errorEl=document.getElementById("loginError");
+
+    function openModal(){ modal.style.display="block"; }
+    function closeLoginModal(){ modal.style.display="none"; errorEl.textContent=""; }
+    function updateButtons(){ if(sessionStorage.getItem("auth")==="ok"){ loginBtnNav.textContent="Logout"; signupBtnNav.style.display="none"; } else { loginBtnNav.textContent="Login"; signupBtnNav.style.display="inline-block"; } }
+
+    loginBtnNav.addEventListener("click", ()=>{ if(sessionStorage.getItem("auth")==="ok"){ sessionStorage.removeItem("auth"); updateButtons(); window.location.href="index.html"; } else openModal(); });
+    signupBtnNav.addEventListener("click", openModal);
+    closeModal.addEventListener("click", closeLoginModal);
+    loginSubmit.addEventListener("click", ()=>{ const u=(document.getElementById("username").value||"").trim(); const p=(document.getElementById("password").value||"").trim(); if(!u||!p){ errorEl.textContent="Please enter username and password."; return; } if(u===VALID_USER && p===VALID_PASS){ sessionStorage.setItem("auth","ok"); closeLoginModal(); updateButtons(); window.location.href="about.html"; } else errorEl.textContent="Invalid username or password."; });
+    ["username","password"].forEach(id=>document.getElementById(id).addEventListener("keydown",e=>{ if(e.key==="Enter") loginSubmit.click(); }));
+    window.addEventListener("click",e=>{ if(e.target===modal) closeLoginModal(); });
+    updateButtons();
+  </script>
+</body>
+</html>

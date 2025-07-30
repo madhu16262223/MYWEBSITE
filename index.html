@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>madhu_WEB — Home</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="main">
+    <!-- NAVBAR -->
+    <div class="navbar">
+      <div class="icon"><h2 class="logo">madhu</h2></div>
+
+      <div class="menu">
+        <ul>
+          <li><a href="./index.html" class="active">HOME</a></li>
+          <li><a href="./about.html">ABOUT</a></li>
+          <li><a href="./service.html">SERVICE</a></li>
+          <li><a href="./design.html">DESIGN</a></li>
+          <li><a href="./projects.html">PROJECTS</a></li>
+          <li><a href="./contact.html">CONTACT</a></li>
+        </ul>
+      </div>
+
+      <!-- Top-right Auth buttons -->
+      <div class="auth-buttons">
+        <button id="loginBtnNav" class="auth-btn">Login</button>
+        <button id="signupBtnNav" class="auth-btn">Signup</button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="content">
+      <h1>madhu_web & <br><span>Development</span> <br>Course</h1>
+      <p class="par">
+        Python | Web Dev | ML • APIs | Databases | Cloud • Clean UI & performance
+      </p>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="loginModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-label="Login">
+      <span id="closeModal" class="close" title="Close">&times;</span>
+      <h2>Login Here</h2>
+      <input id="username" type="text" placeholder="Enter Username" autocomplete="username" />
+      <input id="password" type="password" placeholder="Enter Password" autocomplete="current-password" />
+      <button id="loginSubmit" class="btnn" type="button">Login</button>
+      <p id="loginError" class="error-text" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <!-- AUTH / MODAL LOGIC -->
+  <script>
+    const VALID_USER = "gurumadhu.k";
+    const VALID_PASS = "madhu1626";
+
+    const loginBtnNav = document.getElementById("loginBtnNav");
+    const signupBtnNav = document.getElementById("signupBtnNav");
+    const modal = document.getElementById("loginModal");
+    const closeModal = document.getElementById("closeModal");
+    const loginSubmit = document.getElementById("loginSubmit");
+    const errorEl = document.getElementById("loginError");
+
+    function openModal() { modal.style.display = "block"; }
+    function closeLoginModal() { modal.style.display = "none"; errorEl.textContent = ""; }
+
+    function updateButtons() {
+      if (sessionStorage.getItem("auth") === "ok") {
+        loginBtnNav.textContent = "Logout";
+        signupBtnNav.style.display = "none";
+      } else {
+        loginBtnNav.textContent = "Login";
+        signupBtnNav.style.display = "inline-block";
+      }
+    }
+
+    loginBtnNav.addEventListener("click", () => {
+      if (sessionStorage.getItem("auth") === "ok") {
+        sessionStorage.removeItem("auth");  // logout
+        updateButtons();
+        window.location.href = "index.html";
+      } else {
+        openModal();
+      }
+    });
+
+    signupBtnNav.addEventListener("click", openModal);
+    closeModal.addEventListener("click", closeLoginModal);
+
+    loginSubmit.addEventListener("click", () => {
+      const user = (document.getElementById("username").value || "").trim();
+      const pass = (document.getElementById("password").value || "").trim();
+      if (!user || !pass) { errorEl.textContent = "Please enter username and password."; return; }
+      if (user === VALID_USER && pass === VALID_PASS) {
+        sessionStorage.setItem("auth", "ok");
+        closeLoginModal();
+        updateButtons();
+        window.location.href = "about.html"; // after login
+      } else {
+        errorEl.textContent = "Invalid username or password.";
+      }
+    });
+
+    ["username","password"].forEach(id =>
+      document.getElementById(id).addEventListener("keydown", e => {
+        if (e.key === "Enter") loginSubmit.click();
+      })
+    );
+
+    window.addEventListener("click", e => { if (e.target === modal) closeLoginModal(); });
+
+    updateButtons();
+  </script>
+</body>
+</html>
